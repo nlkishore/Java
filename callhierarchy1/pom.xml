@@ -39,6 +39,7 @@
                     <rulesets>
                         <ruleset>custom-ruleset.xml</ruleset>
                     </rulesets>
+                    <targetJdk>1.8</targetJdk> <targetDirectory>src/myapp/java</targetDirectory>
                 </configuration>
             </plugin>
         </plugins>
