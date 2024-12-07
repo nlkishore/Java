@@ -34,9 +34,18 @@
             <artifactId>javaparser-core</artifactId>
             <version>3.25.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-email</artifactId>
+            <version>1.5</version>
+        </dependency>
 
     </dependencies>
     <build>
+        <!--<sourceDirectory>src</sourceDirectory>
+        <resources>
+            <resource>src/main/resources</resource>
+        </resources>-->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -44,6 +53,16 @@
                 <version>2.3</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <mainClass>org.example.EmailWithBase64Image</mainClass>
+                    <!--<mainClass>org.example.Base64DecoderExample</mainClass>-->
+                    <!--<mainClass>org.example.SendEmailWithGmail</mainClass>-->
                 </configuration>
             </plugin>
         </plugins>
