@@ -5,6 +5,7 @@ public class ComplexObject {
     private int age;
     private String address;
     private boolean isActive;
+    
 
     // Constructor with validation
     public ComplexObject(String name, int age, String address, boolean isActive) {
