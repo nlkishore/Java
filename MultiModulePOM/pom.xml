@@ -13,9 +13,11 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>module1</module>
+        <!--<module>module1</module>
         <module>module2</module>
         <module>complex-java-project</module>
+        <module>JarCompare</module>-->
+        <module>MQConsumer</module>
     </modules>
 
 
