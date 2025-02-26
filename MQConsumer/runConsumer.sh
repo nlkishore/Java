@@ -9,3 +9,10 @@ export CLASSPATH=".:$JBOSS_CLIENT_JAR"
 
 # Run Java Consumer
 java JBossMQConsumer
+
+java -cp "target/jboss-mq-consumer-1.0-SNAPSHOT.jar:target/dependency/*" com.example.JBossMQConsumer
+
+export CLASSPATH="lib/*:target/MQConsumer.jar"
+java -jar target/MQConsumer.jar
+
+CLASSPATH="lib/*:target/MQConsumer.jar" java -jar target/MQConsumer.jar
