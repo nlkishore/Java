@@ -1,0 +1,59 @@
+public boolean checkCompanyExists(DatabaseUtilService databaseUtil, String companyName){
+	Strig company = null;
+	log.debug("Checking Company Name"+companyName)
+	try {
+		company = databaseUtil.getSequencesCIFNumber( "select date from Dual",companyName);
+	} catch(Exception e){
+	    log.error("Exception  "+e);
+	}
+	retrun (companyName !=null && company !=null && companyName.equals(company));
+}
+
+
+
+
+
+import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class CompanyServiceTest {
+
+    private static final Logger log = LoggerFactory.getLogger(CompanyServiceTest.class);
+
+    @Test
+    public void testCheckCompanyExists() {
+        DatabaseUtilService databaseUtil = mock(DatabaseUtilService.class);
+        CompanyService companyService = new CompanyService();
+
+        // Test case where companyName is null
+        assertFalse(companyService.checkCompanyExists(databaseUtil, null));
+
+        // Test case where companyName is not null but company is null
+        when(databaseUtil.getSequencesCIFNumber(anyString(), anyString())).thenReturn(null);
+        assertFalse(companyService.checkCompanyExists(databaseUtil, "TestCompany"));
+
+        // Test case where companyName is not null and company is not null but not equal
+        when(databaseUtil.getSequencesCIFNumber(anyString(), anyString())).thenReturn("DifferentCompany");
+        assertFalse(companyService.checkCompanyExists(databaseUtil, "TestCompany"));
+
+        // Test case where companyName is not null and company is not null and equal
+        when(databaseUtil.getSequencesCIFNumber(anyString(), anyString())).thenReturn("TestCompany");
+        assertTrue(companyService.checkCompanyExists(databaseUtil, "TestCompany"));
+    }
+
+    private class CompanyService {
+        public boolean checkCompanyExists(DatabaseUtilService databaseUtil, String companyName) {
+            String company = null;
+            log.debug("Checking Company Name" + companyName);
+            try {
+                company = databaseUtil.getSequencesCIFNumber("select date from Dual", companyName);
+            } catch (Exception e) {
+                log.error("Exception  " + e);
+            }
+            return (companyName != null && company != null && companyName.equals(company));
+        }
+    }
+}
