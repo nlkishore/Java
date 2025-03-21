@@ -277,3 +277,79 @@ public class InflightMigrationLauncherTest {
         }
     }
 }
+
+
+public int processFile(DatabaseUtilService databaseUtil, String[] args) throws SQLException,IOException {
+try{
+if("1".equals(cewStatus !=null ? cewStatus.trim() :"")){
+	cewStatus = "PASS";
+}elsie if("2".equals(cewStatus !=null ? cewStatus.trim() :"")){
+	cewStatus = "SUCCESS";
+}
+}catch(SQLException | IOException){
+	log.error("Error Reakding input File :"+inputFile));
+	return 1;
+}
+
+}
+
+
+
+import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
+import org.junit.Test;
+import java.sql.SQLException;
+import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class ProcessFileTest {
+
+    private static final Logger log = LoggerFactory.getLogger(ProcessFileTest.class);
+
+    @Test
+    public void testProcessFilePass() throws SQLException, IOException {
+        DatabaseUtilService databaseUtil = mock(DatabaseUtilService.class);
+        ProcessFile processFile = new ProcessFile();
+
+        // Test case where cewStatus is "1"
+        String[] args = {};
+        String cewStatus = "1";
+        assertEquals(0, processFile.processFile(databaseUtil, args));
+        assertEquals("PASS", cewStatus);
+    }
+
+    @Test
+    public void testProcessFileSuccess() throws SQLException, IOException {
+        DatabaseUtilService databaseUtil = mock(DatabaseUtilService.class);
+        ProcessFile processFile = new ProcessFile();
+
+        // Test case where cewStatus is "2"
+        String[] args = {};
+        String cewStatus = "2";
+        assertEquals(0, processFile.processFile(databaseUtil, args));
+        assertEquals("SUCCESS", cewStatus);
+    }
+
+    @Test
+    public void testProcessFileSQLException() throws SQLException, IOException {
+        DatabaseUtilService databaseUtil = mock(DatabaseUtilService.class);
+        ProcessFile processFile = new ProcessFile();
+
+        // Test case where SQLException is thrown
+        doThrow(new SQLException("SQL Exception")).when(databaseUtil).someMethod();
+        String[] args = {};
+        assertEquals(1, processFile.processFile(databaseUtil, args));
+    }
+
+    @Test
+    public void testProcessFileIOException() throws SQLException, IOException {
+        DatabaseUtilService databaseUtil = mock(DatabaseUtilService.class);
+        ProcessFile processFile = new ProcessFile();
+
+        // Test case where IOException is thrown
+        doThrow(new IOException("IO Exception")).when(databaseUtil).someMethod();
+        String[] args = {};
+        assertEquals(1, processFile.processFile(databaseUtil, args));
+    }
+}
