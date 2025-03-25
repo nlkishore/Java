@@ -353,3 +353,140 @@ public class ProcessFileTest {
         assertEquals(1, processFile.processFile(databaseUtil, args));
     }
 }
+
+
+
+PoolDataSevice Class of GST UserProfile
+
+
+import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
+import org.junit.Test;
+import org.junit.Before;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Properties;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import oracle.ucp.jdbc.PoolDataSource;
+import oracle.ucp.jdbc.PoolDataSourceFactory;
+
+public class DatabaseUtilsServiceTest {
+
+    private DatabaseUtilsService databaseUtilsService;
+    private Properties properties;
+    private PoolDataSource mockPds;
+    private Connection mockConnection;
+    private Logger mockLogger;
+
+    @Before
+    public void setUp() throws Exception {
+        databaseUtilsService = new DatabaseUtilsService();
+        properties = new Properties();
+        properties.setProperty("BATCH_HOME", "/path/to/batch/home");
+        properties.setProperty("dbConfig.file", "dbConfig.xml");
+
+        mockPds = mock(PoolDataSource.class);
+        mockConnection = mock(Connection.class);
+        mockLogger = mock(Logger.class);
+
+        DatabaseUtilsService.pds = mockPds;
+        DatabaseUtilsService.LOG = mockLogger;
+    }
+
+    @Test
+    public void testGetConnection() throws Exception {
+        when(mockPds.getConnection()).thenReturn(mockConnection);
+
+        Connection connection = databaseUtilsService.getConnection(properties);
+
+        assertNotNull(connection);
+        verify(mockPds).getConnection();
+        verify(mockLogger).trace(anyString());
+        verify(mockLogger).info(anyString());
+    }
+
+    @Test
+    public void testGetConnectionWithException() throws Exception {
+        DatabaseUtilsService.pds = null; // Reset the PoolDataSource to null
+        doThrow(new SQLException("SQL Exception")).when(mockPds).getConnection();
+
+        try {
+            databaseUtilsService.getConnection(properties);
+            fail("Expected an Exception to be thrown");
+        } catch (Exception e) {
+            assertEquals("java.sql.SQLException: SQL Exception", e.getMessage());
+            verify(mockLogger).error(anyString(), any(Exception.class));
+        }
+    }
+
+    @Test
+    public void testReleaseConnection() throws SQLException {
+        databaseUtilsService.releaseConnection(mockConnection);
+        verify(mockConnection).close();
+    }
+
+    @Test
+    public void testReleaseConnectionWithException() throws SQLException {
+        doThrow(new SQLException("SQL Exception")).when(mockConnection).close();
+
+        databaseUtilsService.releaseConnection(mockConnection);
+
+        verify(mockLogger).error(anyString(), any(SQLException.class));
+    }
+}
+
+
+
+
+
+import static org.junit.Assert.*;
+import org.junit.Test;
+
+public class SimpleBeanTest {
+
+    @Test
+    public void testGettersAndSetters() {
+        SimpleBean bean = new SimpleBean();
+        bean.setName("John Doe");
+        bean.setAge(30);
+        bean.setEmail("john.doe@example.com");
+
+        assertEquals("John Doe", bean.getName());
+        assertEquals(30, bean.getAge());
+        assertEquals("john.doe@example.com", bean.getEmail());
+    }
+
+    @Test
+    public void testToString() {
+        SimpleBean bean = new SimpleBean("John Doe", 30, "john.doe@example.com");
+        String expected = "SimpleBean{name='John Doe', age=30, email='john.doe@example.com'}";
+        assertEquals(expected, bean.toString());
+    }
+
+    @Test
+    public void testEquals() {
+        SimpleBean bean1 = new SimpleBean("John Doe", 30, "john.doe@example.com");
+        SimpleBean bean2 = new SimpleBean("John Doe", 30, "john.doe@example.com");
+        SimpleBean bean3 = new SimpleBean("Jane Doe", 25, "jane.doe@example.com");
+
+        assertTrue(bean1.equals(bean2));
+        assertFalse(bean1.equals(bean3));
+    }
+
+    @Test
+    public void testHashCode() {
+        SimpleBean bean1 = new SimpleBean("John Doe", 30, "john.doe@example.com");
+        SimpleBean bean2 = new SimpleBean("John Doe", 30, "john.doe@example.com");
+        SimpleBean bean3 = new SimpleBean("Jane Doe", 25, "jane.doe@example.com");
+
+        assertEquals(bean1.hashCode(), bean2.hashCode());
+        assertNotEquals(bean1.hashCode(), bean3.hashCode());
+    }
+}
